@@ -14,26 +14,31 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Qt 6.9.1 (mingw_64) + WebSockets
+      - name: Install Qt 6.9.1 (msvc2022_64) + WebSockets
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.9.1'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_mingw'
+          arch: 'win64_msvc2022_64'
           modules: 'qtwebsockets'
           cache: true
 
       - name: Setup CMake & Ninja
         uses: lukka/get-cmake@latest
 
+      - name: Activate MSVC x64 environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
       - name: Configure
-        run: cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$env:Qt6_DIR/../../.." -DRATS_SEARCH_BUILD_TESTS=OFF
-        shell: pwsh
+        shell: bash
+        run: cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$Qt6_DIR/../../.." -DRATS_SEARCH_BUILD_TESTS=OFF
 
       - name: Build
+        shell: bash
         run: cmake --build build --config Release
-        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
