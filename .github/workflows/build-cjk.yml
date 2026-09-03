@@ -41,12 +41,26 @@ jobs:
         run: cmake --build build --config Release
 
       - name: Deploy Qt runtime (windeployqt) + copy MySQL driver
-        shell: bash
+        shell: pwsh
         run: |
-          QT_DIR_BIN=$(dirname "$Qt6_DIR")
-          echo "Qt6_DIR=$Qt6_DIR  bin=$QT_DIR_BIN"
-          "$QT_DIR_BIN/windeployqt.exe" --release --no-translations --no-opengl-sw build/bin/RatsSearch.exe
-          cp "$QT_DIR_BIN/../plugins/sqldrivers/qsqlmysql.dll" build/bin/sqldrivers/ 2>&1 || { echo "qsqlmysql copy failed, listing plugins:"; ls -la "$QT_DIR_BIN/../plugins/sqldrivers/" 2>&1; }
+          $qtRoot = "$env:Qt6_DIR"
+          if (-not $qtRoot) {
+            $qtRoot = "D:\a\rats-search\Qt\6.10.1\msvc2022_64"
+          }
+          Write-Host "Qt6_DIR=$qtRoot"
+          $qtBin = Join-Path $qtRoot "bin"
+          $windeploy = Join-Path $qtBin "windeployqt.exe"
+          Write-Host "windeployqt=$windeploy"
+          & $windeploy --release --no-translations --no-opengl-sw (Join-Path $PWD "build/bin/RatsSearch.exe")
+          $mysqlSrc = Join-Path $qtRoot "plugins/sqldrivers/qsqlmysql.dll"
+          $mysqlDst = Join-Path $PWD "build/bin/sqldrivers/qsqlmysql.dll"
+          if (Test-Path $mysqlSrc) {
+            Copy-Item $mysqlSrc $mysqlDst -Force
+            Write-Host "qsqlmysql.dll copied OK"
+          } else {
+            Write-Host "qsqlmysql.dll NOT FOUND at $mysqlSrc"
+            Get-ChildItem (Join-Path $qtRoot "plugins/sqldrivers/")
+          }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
