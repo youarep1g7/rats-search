@@ -757,6 +757,9 @@ index torrents
     
     min_prefix_len = 3
     expand_keywords = 1
+    charset_table = cjk, english, numeric
+    ngram_len = 1
+    ngram_chars = cjk
     
     rt_attr_string = hash
     rt_attr_string = name
@@ -785,6 +788,9 @@ index files
     type = rt
     path = %1/files
     
+    charset_table = cjk, english, numeric
+    ngram_len = 1
+    ngram_chars = cjk
     rt_field = path
     rt_attr_string = hash
     rt_field = size
