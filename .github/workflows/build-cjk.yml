@@ -14,15 +14,15 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Qt 6.9.1 (msvc2022_64) + WebSockets
+      - name: Install Qt 6.10.1 (msvc2022_64) + WebSockets
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.9.1'
+          version: '6.10.1'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2022_64'
           modules: 'qtwebsockets'
-          cache: true
+          cache: false
 
       - name: Setup CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -39,6 +39,14 @@ jobs:
       - name: Build
         shell: bash
         run: cmake --build build --config Release
+
+      - name: Deploy Qt runtime (windeployqt) + copy MySQL driver
+        shell: bash
+        run: |
+          QT_DIR_BIN=$(dirname "$Qt6_DIR")
+          echo "Qt6_DIR=$Qt6_DIR  bin=$QT_DIR_BIN"
+          "$QT_DIR_BIN/windeployqt.exe" --release --no-translations --no-opengl-sw build/bin/RatsSearch.exe
+          cp "$QT_DIR_BIN/../plugins/sqldrivers/qsqlmysql.dll" build/bin/sqldrivers/ 2>&1 || { echo "qsqlmysql copy failed, listing plugins:"; ls -la "$QT_DIR_BIN/../plugins/sqldrivers/" 2>&1; }
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
