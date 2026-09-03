@@ -757,9 +757,9 @@ index torrents
     
     min_prefix_len = 3
     expand_keywords = 1
-    charset_table = 0..9, A..Z->a, a..z, U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+FE30..U+FE4F, U+FF00..U+FFEF
+    charset_table = 0..9, A..Z->a, a..z
     ngram_len = 1
-    ngram_chars = U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF
+    ngram_chars = U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+FE30..U+FE4F, U+FF00..U+FFEF
     
     rt_attr_string = hash
     rt_attr_string = name
@@ -788,9 +788,9 @@ index files
     type = rt
     path = %1/files
     
-    charset_table = 0..9, A..Z->a, a..z, U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+FE30..U+FE4F, U+FF00..U+FFEF
+    charset_table = 0..9, A..Z->a, a..z
     ngram_len = 1
-    ngram_chars = U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF
+    ngram_chars = U+3400..U+4DBF, U+4E00..U+9FFF, U+F900..U+FAFF, U+FE30..U+FE4F, U+FF00..U+FFEF
     rt_field = path
     rt_attr_string = hash
     rt_field = size
